@@ -13,6 +13,13 @@
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Structible" />
 <meta name="twitter:description" content="Think clearly. Communicate kindly. Act efficiently. Local-first and private." />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="Structible" />
 <style>
   :root{
     --bg:#f4f6f8; --panel:#ffffff; --ink:#1d2630; --ink-soft:#566273;
@@ -730,6 +737,11 @@ wireMic("r-mic","r-input");
 // Enter-to-run on single-line-ish: Ctrl/Cmd+Enter in the generator
 $("#s-input").addEventListener("keydown", e=>{ if((e.metaKey||e.ctrlKey)&&e.key==="Enter") $("#s-go").click(); });
 $("#r-input").addEventListener("keydown", e=>{ if((e.metaKey||e.ctrlKey)&&e.key==="Enter") $("#r-go").click(); });
+
+/* PWA: register the offline service worker (only on http/https, not file://) */
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+  window.addEventListener("load", ()=>{ navigator.serviceWorker.register("sw.js").catch(()=>{}); });
+}
 </script>
 </body>
 </html>
