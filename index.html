@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Structible — think clearly, communicate kindly, act efficiently</title>
+<meta name="description" content="Turn messy thoughts into clear, reusable units of meaning. Positive reframing, message builder, daily coherence. Local-first and private." />
+<meta name="theme-color" content="#2f7d6e" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Structible — think clearly, communicate kindly, act efficiently" />
+<meta property="og:description" content="Turn messy thoughts, hard conversations, and decisions into clear structured meaning. Positive reframing, a kind message builder, and a daily coherence check. Local-first and private — nothing leaves your device." />
+<meta property="og:url" content="https://yqpnksrghc-commits.github.io/structible/" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Structible" />
+<meta name="twitter:description" content="Think clearly. Communicate kindly. Act efficiently. Local-first and private." />
+<style>
+  :root{
+    --bg:#f4f6f8; --panel:#ffffff; --ink:#1d2630; --ink-soft:#566273;
+    --line:#e3e8ee; --accent:#2f7d6e; --accent-2:#3a6ea5; --accent-soft:#e7f2ef;
+    --warn:#b06a2c; --warn-soft:#fbf0e3; --chip:#eef2f6; --shadow:0 1px 2px rgba(20,30,45,.06),0 8px 24px rgba(20,30,45,.06);
+    --radius:16px; --radius-sm:10px; --maxw:760px;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#11161c; --panel:#1a212a; --ink:#e9eef3; --ink-soft:#9fb0c0;
+      --line:#28323e; --accent:#5fc7b1; --accent-2:#7fb0e0; --accent-soft:#15302a;
+      --warn:#e0a766; --warn-soft:#2c2316; --chip:#222c37; --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.3); }
+  }
+  :root[data-theme="light"]{ --bg:#f4f6f8; --panel:#fff; --ink:#1d2630; --ink-soft:#566273; --line:#e3e8ee; --accent:#2f7d6e; --accent-2:#3a6ea5; --accent-soft:#e7f2ef; --warn:#b06a2c; --warn-soft:#fbf0e3; --chip:#eef2f6; --shadow:0 1px 2px rgba(20,30,45,.06),0 8px 24px rgba(20,30,45,.06); }
+  :root[data-theme="dark"]{ --bg:#11161c; --panel:#1a212a; --ink:#e9eef3; --ink-soft:#9fb0c0; --line:#28323e; --accent:#5fc7b1; --accent-2:#7fb0e0; --accent-soft:#15302a; --warn:#e0a766; --warn-soft:#2c2316; --chip:#222c37; --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.3); }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:env(safe-area-inset-bottom)}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 16px}
+
+  header.app{padding:22px 0 10px;text-align:center}
+  .logo{font-size:26px;font-weight:700;letter-spacing:-.02em;display:inline-flex;align-items:center;gap:10px}
+  .logo .mark{width:26px;height:26px;flex:0 0 auto}
+  .tag{color:var(--ink-soft);font-size:13.5px;margin-top:4px}
+
+  nav.tabs{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:saturate(1.4) blur(8px);
+    display:flex;gap:4px;overflow-x:auto;padding:8px 12px;border-bottom:1px solid var(--line);scrollbar-width:none}
+  nav.tabs::-webkit-scrollbar{display:none}
+  nav.tabs button{flex:0 0 auto;border:0;background:transparent;color:var(--ink-soft);font:inherit;font-size:14px;font-weight:600;
+    padding:8px 13px;border-radius:999px;cursor:pointer;white-space:nowrap}
+  nav.tabs button.active{background:var(--accent-soft);color:var(--accent)}
+  nav.tabs .spacer{flex:1 1 auto}
+  nav.tabs button.icon{padding:8px 11px}
+
+  main{padding:18px 0 60px}
+  section.view{display:none;animation:fade .18s ease}
+  section.view.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin:0 0 16px}
+  h2.view-title{font-size:19px;margin:2px 0 2px}
+  .hint{color:var(--ink-soft);font-size:13.5px;margin:0 0 14px}
+
+  label.fld{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin:12px 0 5px}
+  textarea,input[type=text],select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);
+    border-radius:var(--radius-sm);padding:11px 12px;resize:vertical}
+  textarea{min-height:96px}
+  textarea:focus,input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .btn{appearance:none;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:inherit;font-weight:600;font-size:14px;
+    padding:10px 16px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:transform .05s ease}
+  .btn:active{transform:translateY(1px)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.ghost{background:transparent}
+  .btn.sm{padding:7px 12px;font-size:13px}
+  .btn.mic.live{background:var(--warn);border-color:var(--warn);color:#fff}
+  .btn:disabled{opacity:.5;cursor:default}
+
+  .chip{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+    background:var(--chip);color:var(--ink-soft);padding:3px 9px;border-radius:999px}
+  .chip.type{background:var(--accent-soft);color:var(--accent)}
+  .chip.inferred{background:var(--warn-soft);color:var(--warn)}
+
+  .structible{border:1px solid var(--line);border-radius:var(--radius-sm);overflow:hidden;margin-top:14px;background:var(--bg)}
+  .structible .top{display:flex;align-items:center;gap:8px;padding:10px 13px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .structible .grid{display:grid;grid-template-columns:120px 1fr;gap:0}
+  .structible .k{padding:9px 13px;font-size:12px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.03em;border-top:1px solid var(--line)}
+  .structible .v{padding:9px 13px;border-top:1px solid var(--line)}
+  .structible .grid > .k:first-child,.structible .grid > .k:first-child + .v{border-top:0}
+  @media (max-width:480px){.structible .grid{grid-template-columns:96px 1fr}}
+
+  .reframe-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+  @media (max-width:560px){.reframe-pair{grid-template-columns:1fr}}
+  .reframe-pair .box{border:1px solid var(--line);border-radius:var(--radius-sm);padding:12px;background:var(--bg)}
+  .reframe-pair .box.to{border-color:var(--accent);background:var(--accent-soft)}
+  .reframe-pair .lab{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);margin-bottom:6px}
+  .reframe-pair .box.to .lab{color:var(--accent)}
+  .truthnote{margin-top:10px;font-size:12.5px;color:var(--ink-soft);display:flex;align-items:center;gap:7px}
+
+  .out{white-space:pre-wrap;font-family:var(--mono);font-size:13.5px;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-sm);padding:13px;margin-top:12px}
+
+  .libitem{border:1px solid var(--line);border-radius:var(--radius-sm);padding:12px;margin-bottom:10px;background:var(--bg)}
+  .libitem .meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+  .libitem .when{font-size:12px;color:var(--ink-soft);margin-left:auto}
+  .libitem .preview{font-size:14px}
+  .libitem .acts{margin-top:9px;display:flex;gap:8px;flex-wrap:wrap}
+  .empty{color:var(--ink-soft);text-align:center;padding:30px 10px;font-size:14px}
+
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--panel)}
+  .seg button{border:0;background:transparent;color:var(--ink-soft);font:inherit;font-size:13px;font-weight:600;padding:7px 13px;cursor:pointer}
+  .seg button.on{background:var(--accent);color:#fff}
+
+  .drawer{position:fixed;inset:0;background:rgba(10,15,22,.45);display:none;z-index:50;align-items:flex-end;justify-content:center}
+  .drawer.open{display:flex}
+  .drawer .sheet{background:var(--panel);width:100%;max-width:var(--maxw);border-radius:var(--radius) var(--radius) 0 0;padding:18px;max-height:86vh;overflow:auto}
+  @media (min-width:560px){.drawer{align-items:center}.drawer .sheet{border-radius:var(--radius)}}
+
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);
+    padding:10px 16px;border-radius:999px;font-size:13.5px;font-weight:600;opacity:0;pointer-events:none;transition:.22s;z-index:80}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .foot{color:var(--ink-soft);font-size:11.5px;text-align:center;padding:12px 0 30px;line-height:1.7}
+  .foot code{font-family:var(--mono)}
+  .switch{display:flex;align-items:center;gap:10px;margin:10px 0}
+  .switch input{width:auto}
+  details{border:1px solid var(--line);border-radius:var(--radius-sm);padding:0 13px;margin-top:10px;background:var(--bg)}
+  details summary{cursor:pointer;font-weight:600;font-size:14px;padding:11px 0}
+  details[open] summary{border-bottom:1px solid var(--line)}
+  details .body{padding:11px 0 13px}
+</style>
+</head>
+<body>
+<header class="app wrap">
+  <div class="logo">
+    <svg class="mark" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5" stroke="var(--accent)" stroke-width="2"/><path d="M7 12.5l3.2 3.2L17 8.5" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Structible
+  </div>
+  <div class="tag">Think clearly · Communicate kindly · Act efficiently</div>
+</header>
+
+<nav class="tabs wrap" id="tabs" aria-label="Sections">
+  <button data-view="structible" class="active">Structible</button>
+  <button data-view="reframe">Reframe</button>
+  <button data-view="message">Message</button>
+  <button data-view="coherence">Coherence</button>
+  <button data-view="library">Library</button>
+  <span class="spacer"></span>
+  <button data-view="__settings" class="icon" title="Settings" aria-label="Settings">⚙︎</button>
+</nav>
+
+<main class="wrap">
+
+  <!-- STRUCTIBLE GENERATOR -->
+  <section class="view active" id="view-structible">
+    <div class="card">
+      <h2 class="view-title">Thought → Structible</h2>
+      <p class="hint">Write or speak a raw thought, feeling, plan, or problem. Structible turns it into one clear, reusable unit of meaning — and one next action.</p>
+      <label class="fld" for="s-input">Your raw thought</label>
+      <textarea id="s-input" placeholder="e.g. I'm overwhelmed and don't know what to do."></textarea>
+      <div class="row" style="margin-top:12px">
+        <button class="btn primary" id="s-go">Structify</button>
+        <button class="btn ghost mic" id="s-mic" title="Speak" hidden>🎙 Speak</button>
+        <span class="spacer" style="flex:1"></span>
+        <label class="switch" title="Switch the schema to the LAB builder/research operators">
+          <input type="checkbox" id="s-lab" /> <span style="font-size:13px;font-weight:600;color:var(--ink-soft)">LAB mode</span>
+        </label>
+      </div>
+      <div id="s-out"></div>
+    </div>
+  </section>
+
+  <!-- POSITIVE REFRAME -->
+  <section class="view" id="view-reframe">
+    <div class="card">
+      <h2 class="view-title">Positive Reframe</h2>
+      <p class="hint">Paste destructive or reactive language. Structible keeps the truth and rebuilds the framing — friction down, meaning up. Works on self-talk and on conflict language alike.</p>
+      <label class="fld" for="r-input">What you're telling yourself (or about to send)</label>
+      <textarea id="r-input" placeholder="e.g. This failed.  /  You never listen.  /  I'm a complete failure."></textarea>
+      <div class="row" style="margin-top:12px">
+        <button class="btn primary" id="r-go">Reframe</button>
+        <button class="btn ghost mic" id="r-mic" hidden>🎙 Speak</button>
+      </div>
+      <div id="r-out"></div>
+    </div>
+  </section>
+
+  <!-- MESSAGE BUILDER -->
+  <section class="view" id="view-message">
+    <div class="card">
+      <h2 class="view-title">Message Builder</h2>
+      <p class="hint">Build a clean message through the arc <strong>Recognize → Clarify → Respect → Request → Release</strong>. For apologies, boundaries, requests, repairs, and updates.</p>
+      <label class="fld" for="m-preset">Start from</label>
+      <div class="row">
+        <div class="seg" id="m-preset" role="tablist">
+          <button class="on" data-preset="request">Request</button>
+          <button data-preset="boundary">Boundary</button>
+          <button data-preset="apology">Apology</button>
+          <button data-preset="repair">Repair</button>
+          <button data-preset="update">Update</button>
+        </div>
+      </div>
+      <label class="fld" for="m-to">To (name / relationship)</label>
+      <input type="text" id="m-to" placeholder="e.g. Sam" />
+      <label class="fld" for="m-recognize">Recognize — what's genuinely good or true here</label>
+      <textarea id="m-recognize" placeholder="Something real you appreciate or acknowledge."></textarea>
+      <label class="fld" for="m-clarify">Clarify — the situation, plainly (fact, not blame)</label>
+      <textarea id="m-clarify" placeholder="What happened / what's true, without accusation."></textarea>
+      <label class="fld" for="m-respect">Respect — their position or effort</label>
+      <textarea id="m-respect" placeholder="What you understand or honor about their side."></textarea>
+      <label class="fld" for="m-request">Request — the one clear thing you'd like</label>
+      <textarea id="m-request" placeholder="A specific, kind, doable ask."></textarea>
+      <label class="fld" for="m-release">Release — what you're leaving open / no pressure</label>
+      <textarea id="m-release" placeholder="Give them room. e.g. No rush — whenever works."></textarea>
+      <div class="row" style="margin-top:14px">
+        <button class="btn primary" id="m-go">Build message</button>
+        <div class="seg" id="m-tone" title="Tone">
+          <button class="on" data-tone="warm">Warm</button>
+          <button data-tone="direct">Direct</button>
+          <button data-tone="brief">Brief</button>
+        </div>
+      </div>
+      <div id="m-out"></div>
+    </div>
+  </section>
+
+  <!-- DAILY COHERENCE -->
+  <section class="view" id="view-coherence">
+    <div class="card">
+      <h2 class="view-title">Daily Coherence Check</h2>
+      <p class="hint" id="c-date">Three questions. One minute. Aim the day.</p>
+      <label class="fld" for="c-alive">What is alive today?</label>
+      <textarea id="c-alive" placeholder="What has energy / attention / charge right now."></textarea>
+      <label class="fld" for="c-matters">What matters most?</label>
+      <textarea id="c-matters" placeholder="The one thing that, if true, makes the rest lighter."></textarea>
+      <label class="fld" for="c-action">What is the next loving action?</label>
+      <textarea id="c-action" placeholder="One kind, useful step — toward yourself or another."></textarea>
+      <div class="row" style="margin-top:12px">
+        <button class="btn primary" id="c-save">Save today</button>
+        <span id="c-streak" class="chip" hidden></span>
+      </div>
+      <div id="c-history" style="margin-top:16px"></div>
+    </div>
+  </section>
+
+  <!-- LIBRARY -->
+  <section class="view" id="view-library">
+    <div class="card">
+      <h2 class="view-title">Saved Structibles</h2>
+      <p class="hint">Everything you keep lives here — on this device only. Nothing is uploaded.</p>
+      <div class="row" style="margin-bottom:12px">
+        <select id="lib-filter" style="max-width:220px">
+          <option value="">All types</option>
+        </select>
+        <span class="spacer" style="flex:1"></span>
+        <button class="btn sm ghost" id="lib-export">Export JSON</button>
+        <button class="btn sm ghost" id="lib-clear">Clear all</button>
+      </div>
+      <div id="lib-list"></div>
+    </div>
+  </section>
+</main>
+
+<!-- SETTINGS DRAWER -->
+<div class="drawer" id="drawer">
+  <div class="sheet">
+    <div class="row" style="justify-content:space-between;align-items:center">
+      <h2 class="view-title" style="margin:0">Settings</h2>
+      <button class="btn sm ghost" id="drawer-close">Close</button>
+    </div>
+    <label class="fld">Theme</label>
+    <div class="seg" id="set-theme">
+      <button data-theme="auto" class="on">Auto</button>
+      <button data-theme="light">Light</button>
+      <button data-theme="dark">Dark</button>
+    </div>
+
+    <details>
+      <summary>Local model enhancement (optional)</summary>
+      <div class="body">
+        <p class="hint" style="margin:0 0 8px">Structible works fully without any model — the core engine is deterministic. You can optionally route a thought through a <strong>local</strong> model (Ollama) for a richer draft. Per the LAB grounding gate, model output is shown as <span class="chip inferred">inferred</span> — a suggestion, never ground truth — and never overwrites your structible silently.</p>
+        <div class="switch"><input type="checkbox" id="set-ollama-on" /> <span style="font-size:13px;font-weight:600;color:var(--ink-soft)">Enable “Enhance” on the Structible tab</span></div>
+        <label class="fld" for="set-ollama-url">Ollama URL</label>
+        <input type="text" id="set-ollama-url" placeholder="http://localhost:11434" />
+        <label class="fld" for="set-ollama-model">Model</label>
+        <input type="text" id="set-ollama-model" placeholder="llama3.1:8b" />
+        <div class="row" style="margin-top:10px"><button class="btn sm" id="set-ollama-test">Test connection</button><span id="set-ollama-status" class="hint" style="margin:0"></span></div>
+      </div>
+    </details>
+
+    <p class="foot" style="text-align:left;margin-top:16px">
+      Structible v1 (MVP) · local-first · zero accounts.<br>
+      Built on the LAB standard <code>LAB_POSITIVE_GRAMMAR_V1</code>: truth preserved, framing constructive, friction reduced.
+    </p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="foot wrap">Structible — a unit of meaning you can keep. · Less noise. More meaning. Better communication.</div>
+
+<script>
+"use strict";
+/* ============================================================
+   Structible — single-file local-first app.
+   Engine = the LAB Positive Grammar made operable:
+     reframe   ≈ Rule 3 (failure → information gain) + Rule 1 (judgment → observation)
+     message   ≈ §IV critique/communication arc
+     structible≈ §II six primitives, ◎→ at minimum, with one next action.
+   Invariant (§VIII): framing never alters a truth value. Original is always kept.
+   ============================================================ */
+
+/* ---------- storage ---------- */
+const KEY = { lib:"structible.library.v1", coh:"structible.coherence.v1", set:"structible.settings.v1" };
+const Store = {
+  read(k, fb){ try{ const v = localStorage.getItem(k); return v?JSON.parse(v):fb; }catch(e){ return fb; } },
+  write(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){ toast("Storage unavailable"); } },
+};
+let library  = Store.read(KEY.lib, []);
+let coherence= Store.read(KEY.coh, {});      // { "YYYY-MM-DD": {alive,matters,action,ts} }
+let settings = Object.assign({ theme:"auto", ollamaOn:false, ollamaUrl:"http://localhost:11434", ollamaModel:"llama3.1:8b" }, Store.read(KEY.set, {}));
+
+/* ---------- tiny helpers ---------- */
+const $  = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const esc = s => (s||"").replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const nowISO = () => new Date().toISOString();
+const todayKey = () => { const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); };
+const lc = s => (s||"").toLowerCase();
+let toastT;
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),1700); }
+async function copy(text){ try{ await navigator.clipboard.writeText(text); toast("Copied"); }catch(e){
+  const ta=document.createElement("textarea"); ta.value=text; document.body.appendChild(ta); ta.select(); try{document.execCommand("copy");toast("Copied");}catch(_){toast("Copy failed");} ta.remove(); } }
+
+/* ============================================================
+   ENGINE
+   ============================================================ */
+
+/* --- signal lexicon: keyword → {signal, meaning, frame, action} --- */
+const SIGNALS = [
+  { id:"overwhelm", kw:["overwhelm","too much","drowning","swamped","can't keep up","cant keep up","so much","everything at once","buried","spread thin"],
+    signal:"Overwhelm", meaning:"Too many open loops competing at once",
+    frame:"My system is asking for prioritization, not more effort.",
+    action:"List every open loop, then circle exactly ONE to do next." },
+  { id:"anxiety", kw:["anxious","anxiety","worried","worry","nervous","scared","afraid","dread","panic","what if","on edge"],
+    signal:"Anxiety", meaning:"Uncertainty about an outcome that matters to me",
+    frame:"I care about this outcome — that care can become preparation.",
+    action:"Name one fact you DO know, and one step you can take today." },
+  { id:"anger", kw:["angry","anger","furious","frustrated","frustration","pissed"," mad","resent","fed up","irritated","unfair"],
+    signal:"Anger", meaning:"A value or boundary of mine was crossed",
+    frame:"A boundary became visible. I can state it cleanly instead of carrying it.",
+    action:"Draft ONE sentence: what you need, with no blame. (Try the Message tab.)" },
+  { id:"hurt", kw:["hurt","ignored","unheard","not heard","dismissed","betrayed","rejected","left out","abandoned","disrespected"],
+    signal:"Hurt", meaning:"A need for connection or recognition wasn't met",
+    frame:"I want connection. That want is information, not weakness.",
+    action:"Say the want directly: “I'd like to feel heard about ___.”" },
+  { id:"sad", kw:["sad","down","depressed","empty","lonely","grief","grieving","hopeless","heavy","numb","miss "],
+    signal:"Sadness", meaning:"Something meaningful is missing or has been lost",
+    frame:"What I'm missing shows me what I value.",
+    action:"Name what you're honoring. Then one small, gentle thing for today." },
+  { id:"stuck", kw:["stuck","blocked","paralyzed","don't know","dont know","no idea","lost","confused","unclear","can't decide","cant decide","spinning"],
+    signal:"Stuck", meaning:"The full path isn't visible yet",
+    frame:"The next step is smaller than the whole path.",
+    action:"Define the smallest next step — something doable in 5 minutes." },
+  { id:"guilt", kw:["guilty","guilt","ashamed","shame","embarrassed","my fault","should have","shouldn't have","let them down","let myself down"],
+    signal:"Guilt", meaning:"An action diverged from a value I hold",
+    frame:"I see a gap between action and value — and gaps are repairable.",
+    action:"Name the value, then one concrete act of repair or realignment." },
+  { id:"tired", kw:["exhausted","tired","burnt out","burned out","drained","no energy","running on empty","depleted"],
+    signal:"Depletion", meaning:"My capacity is below current demand",
+    frame:"My capacity is honest data. Respecting it is strength, not failure.",
+    action:"Choose ONE thing to drop or postpone today, on purpose." },
+  { id:"excited", kw:["excited","thrilled","can't wait","cant wait","energized","inspired","fired up","pumped","motivated"],
+    signal:"Activation", meaning:"Energy is present and looking for a channel",
+    frame:"Energy is here. It's ready to be aimed.",
+    action:"Aim it: write the very first action while the charge is high." },
+];
+function detectSignal(text){
+  const t = lc(text);
+  for(const s of SIGNALS){ if(s.kw.some(k=>t.includes(k))) return s; }
+  return { id:"signal", signal:"Signal present", meaning:"Meaning still forming — worth structuring",
+    frame:"There's real signal here; structure makes it usable.",
+    action:"Choose one useful next step and name when you'll do it." };
+}
+
+/* --- type detection --- */
+function detectType(text){
+  const t = lc(text.trim());
+  if(!t) return "Thought";
+  if(/\?\s*$/.test(text) || /^(what|why|how|when|where|who|should i|can i|could|would|is it|do i|am i)\b/.test(t)) return "Question";
+  if(/\b(should i|or should|whether|decide|deciding|which one|option|choose between|vs\.?|\bor\b.*\?)/.test(t)) return "Decision";
+  if(/\b(i need space|need a break|i can't keep|i cant keep|i won't|i wont|that's not okay|thats not okay|no more|boundary|i'm not available|im not available)\b/.test(t)) return "Boundary";
+  if(/\b(i realize|i realized|i see now|it turns out|i learned|i've learned|ive learned|now i understand|the lesson)\b/.test(t)) return "Insight";
+  if(/\b(i value|i believe|what matters|it matters to me|i care about|important to me|stand for)\b/.test(t)) return "Value";
+  if(/\b(i'm going to|im going to|i plan|i will|next week|next month|schedule|roadmap|by friday|by monday|steps?:)\b/.test(t)) return "Plan";
+  if(/\b(i need to|i have to|i must|todo|to-do|task|get done|finish|send the|call the|email the)\b/.test(t)) return "Task";
+  if(/\b(tell (him|her|them)|say to|reply to|respond to|message (him|her|them)|write back|how do i say)\b/.test(t)) return "Message";
+  if(/\b(i feel|feeling|i'm|im |i am|i've been|ive been|i'm so|im so|i feel like)\b/.test(t)) return "State";
+  return "Thought";
+}
+
+const LAB_FIELDS = ["Claim","Assumption","Constraint","Gap","Task","Result","Insight","Next_Action"];
+function labStructible(text){
+  const t = text.trim();
+  const sig = detectSignal(t);
+  return {
+    Claim: t || "(state the claim)",
+    Assumption: "What must be true for this to hold — verify before relying on it.",
+    Constraint: sig.meaning,
+    Gap: "What is not yet known or grounded here.",
+    Task: sig.action,
+    Result: "(pending)",
+    Insight: sig.frame,
+    Next_Action: sig.action,
+    _type:"LAB"
+  };
+}
+function makeStructible(text, labMode){
+  const t = text.trim();
+  if(labMode) return labStructible(t);
+  const type = detectType(t);
+  const sig = detectSignal(t);
+  return { Type:type, Signal:sig.signal, Meaning:sig.meaning, "Positive Frame":sig.frame, "Next Action":sig.action, _type:type, _raw:t };
+}
+
+/* --- positive reframe: specific patterns first, then general transforms --- */
+const REFRAME_MAP = [
+  [/\bi['’ ]?m? ?a? ?(complete |total |such a )?failure\b|\bi failed\b|\bi'?m a loser\b/i, "An attempt didn't land. My worth isn't the score of one attempt — and I now know more than before."],
+  [/\b(this|that|it) (just )?failed\b|\b(this|that) (is|was) a (complete |total )?(disaster|failure|mess)\b/i, "This revealed a constraint and sharpened the next attempt."],
+  [/\bi can'?t do (this|it)\b|\bi can'?t\b/i, "I haven't found the path yet — that's a 'not yet', not a 'never'."],
+  [/\bit'?s hopeless\b|\bthere'?s no point\b|\bwhy bother\b/i, "The obstruction is clearer now, which is exactly what makes the next move findable."],
+  [/\bi'?m stuck\b|\bi'?m blocked\b/i, "I've found the current boundary. The next step is smaller than the whole path."],
+  [/\bi'?m not good enough\b|\bi'?m not smart enough\b/i, "This skill isn't built yet — and skills are built by exactly this kind of attempt."],
+  [/\bi always (mess|screw|stuff) (it|things|this) up\b|\bi always fail\b/i, "A pattern showed up that I can now name and adjust."],
+  [/\bi never get it right\b|\bi never (do|get) anything\b/i, "Specific attempts didn't land; the next one can be more precise."],
+  [/\bi wasted (my )?(time|day|effort)\b/i, "I learned what doesn't work, which narrows the search."],
+  [/\beverything (is|'?s) (falling apart|a mess|ruined|going wrong)\b/i, "Several things need attention at once; I can take them one at a time."],
+  [/\bi hate (this|it|my)\b/i, "Something here conflicts with what I value — that's worth naming precisely."],
+  // conflict / relational (you-accusations → I-statements, request to be heard)
+  [/\byou never listen\b|\byou don'?t (ever )?listen\b/i, "I want to feel heard. Can we slow down and make sure we both understand each other?"],
+  [/\byou never\b/i, "When this happens, I feel unseen. I'd like us to find a way that works for both of us."],
+  [/\byou always\b/i, "There's a pattern that's hard for me. Can we look at it together?"],
+  [/\byou don'?t care\b/i, "I'm not feeling considered right now. Can you help me understand your side?"],
+  [/\bnobody listens to me\b|\bno one listens\b/i, "I want to feel heard — and I can ask for that directly."],
+  [/\byou'?re wrong\b/i, "I see this differently. Can we compare what we're each looking at?"],
+  [/\byou (made|make) me\b/i, "When that happened, I felt ___. Here's what I'd need next time."],
+];
+function reframe(text){
+  const raw = text.trim();
+  if(!raw) return { from:"", to:"", kind:"empty" };
+  for(const [re, out] of REFRAME_MAP){ if(re.test(raw)) return { from:raw, to:out, kind:"matched" }; }
+  // general transforms
+  let t = raw;
+  let changed = false;
+  if(/\b(disaster|catastrophe|ruined|terrible|awful|nightmare)\b/i.test(t)){
+    t = t.replace(/\b(disaster|catastrophe|nightmare)\b/ig,"constraint to work with").replace(/\b(ruined|terrible|awful)\b/ig,"harder than hoped"); changed=true;
+  }
+  if(/\b(can'?t|cannot)\b/i.test(t)){ t = t.replace(/\b(can'?t|cannot)\b/ig,"can't yet"); changed=true; }
+  if(/\b(never|always)\b/i.test(t)){ t = t.replace(/\bnever\b/ig,"not consistently yet").replace(/\balways\b/ig,"often"); changed=true; }
+  if(changed) return { from:raw, to:capitalize(t), kind:"softened" };
+  // fallback: keep the truth, add a constructive next-frame
+  return { from:raw, to:raw.replace(/[.!]?\s*$/,"") + " — and the useful next step is to name one thing I can do about it.", kind:"appended" };
+}
+function capitalize(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : s; }
+
+/* --- message builder: Recognize → Clarify → Respect → Request → Release --- */
+const PRESETS = {
+  request:{ recognize:"", clarify:"", respect:"", request:"", release:"No rush — whatever works on your end is fine." },
+  boundary:{ recognize:"I value what we have, which is why I want to be honest.", clarify:"", respect:"I know this may land differently for you.", request:"", release:"I'm sharing this so we're clear, not to start a fight." },
+  apology:{ recognize:"", clarify:"", respect:"I understand how that affected you.", request:"", release:"No pressure to respond right away." },
+  repair:{ recognize:"Our connection matters to me.", clarify:"", respect:"I can see your side of this too.", request:"Could we find a time to talk it through?", release:"Whenever you're ready." },
+  update:{ recognize:"", clarify:"", respect:"", request:"", release:"Happy to go deeper on any part of this." },
+};
+function buildMessage(f, tone){
+  const to = f.to ? f.to.trim() : "";
+  const greet = to ? "Hi "+to+",\n\n" : "";
+  const parts = [];
+  if(f.recognize) parts.push(f.recognize.trim());
+  if(f.clarify)   parts.push(f.clarify.trim());
+  if(f.respect)   parts.push(f.respect.trim());
+  if(f.request)   parts.push((tone==="brief"? "" : "")+f.request.trim());
+  if(f.release)   parts.push(f.release.trim());
+  let body;
+  if(tone==="brief"){
+    body = parts.join(" ");
+  } else if(tone==="direct"){
+    body = parts.join("\n\n");
+  } else { // warm
+    body = parts.join("\n\n");
+  }
+  const close = tone==="brief" ? "" : (to? "\n\nThank you," : "\n\nThank you,");
+  return (greet + body + close).trim() || "(fill in a few fields above, then build)";
+}
+
+/* ============================================================
+   STRUCTIBLE rendering
+   ============================================================ */
+function renderStructibleCard(obj, opts={}){
+  const order = obj._type==="LAB" ? LAB_FIELDS : ["Type","Signal","Meaning","Positive Frame","Next Action"];
+  const typeLabel = obj._type==="LAB" ? "LAB" : (obj.Type||"Structible");
+  let rows = "";
+  for(const k of order){
+    const label = k.replace(/_/g," ");
+    rows += `<div class="k">${esc(label)}</div><div class="v">${esc(obj[k]||"")}</div>`;
+  }
+  const id = opts.id || "";
+  return `<div class="structible" data-id="${id}">
+    <div class="top"><span class="chip type">${esc(typeLabel)}</span>
+      <span class="spacer" style="flex:1"></span>
+      <button class="btn sm ghost act-copy">Copy</button>
+      ${opts.saved? `<button class="btn sm ghost act-del">Delete</button>` : `<button class="btn sm act-save">Save</button>`}
+    </div>
+    <div class="grid">${rows}</div>
+  </div>`;
+}
+function structibleToText(obj){
+  const order = obj._type==="LAB" ? LAB_FIELDS : ["Type","Signal","Meaning","Positive Frame","Next Action"];
+  let out = "STRUCTIBLE\n";
+  for(const k of order) out += k.replace(/_/g," ")+": "+(obj[k]||"")+"\n";
+  return out.trim();
+}
+
+/* ============================================================
+   UI WIRING
+   ============================================================ */
+
+/* tabs */
+$$("#tabs button").forEach(b=>b.addEventListener("click",()=>{
+  const v = b.dataset.view;
+  if(v==="__settings"){ openDrawer(); return; }
+  $$("#tabs button").forEach(x=>x.classList.toggle("active", x===b));
+  $$(".view").forEach(s=>s.classList.toggle("active", s.id==="view-"+v));
+  if(v==="library") renderLibrary();
+  if(v==="coherence") renderCoherence();
+  window.scrollTo({top:0,behavior:"instant"});
+}));
+
+/* --- generator --- */
+let lastStructible = null;
+$("#s-go").addEventListener("click", ()=>{
+  const text = $("#s-input").value;
+  if(!text.trim()){ toast("Write a thought first"); return; }
+  lastStructible = makeStructible(text, $("#s-lab").checked);
+  let html = renderStructibleCard(lastStructible, {});
+  if(settings.ollamaOn) html += `<div class="row" style="margin-top:10px"><button class="btn sm ghost" id="s-enhance">✦ Enhance with local model</button><span id="s-enh-status" class="hint" style="margin:0"></span></div><div id="s-enh-out"></div>`;
+  $("#s-out").innerHTML = html;
+});
+
+/* delegated actions inside generator output */
+$("#s-out").addEventListener("click", async (e)=>{
+  if(e.target.classList.contains("act-copy")){ copy(structibleToText(lastStructible)); }
+  if(e.target.classList.contains("act-save")){ saveItem("structible", lastStructible); }
+  if(e.target.id==="s-enhance"){ enhanceWithOllama(lastStructible); }
+  if(e.target.classList.contains("act-accept-enh")){
+    lastStructible = JSON.parse(e.target.dataset.obj);
+    $("#s-out").querySelector(".structible").outerHTML = renderStructibleCard(lastStructible,{});
+    $("#s-enh-out").innerHTML=""; toast("Merged suggestion");
+  }
+});
+
+/* --- reframe --- */
+$("#r-go").addEventListener("click", ()=>{
+  const text = $("#r-input").value;
+  const r = reframe(text);
+  if(r.kind==="empty"){ toast("Paste something to reframe"); return; }
+  $("#r-out").innerHTML = `
+    <div class="reframe-pair">
+      <div class="box from"><div class="lab">As written</div>${esc(r.from)}</div>
+      <div class="box to"><div class="lab">Constructive frame</div>${esc(r.to)}</div>
+    </div>
+    <div class="truthnote">✓ Truth preserved · framing constructive · the original is kept, not erased.</div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn sm" id="r-copy">Copy reframe</button>
+      <button class="btn sm ghost" id="r-save">Save</button>
+    </div>`;
+  $("#r-copy").onclick = ()=>copy(r.to);
+  $("#r-save").onclick = ()=>saveItem("reframe", { _type:"Reframe", From:r.from, "Positive Frame":r.to });
+});
+
+/* --- message builder --- */
+let msgPreset="request", msgTone="warm";
+$("#m-preset").addEventListener("click", e=>{
+  if(e.target.tagName!=="BUTTON") return;
+  msgPreset = e.target.dataset.preset;
+  $$("#m-preset button").forEach(b=>b.classList.toggle("on", b===e.target));
+  const p = PRESETS[msgPreset];
+  $("#m-recognize").value=p.recognize; $("#m-clarify").value=p.clarify; $("#m-respect").value=p.respect; $("#m-request").value=p.request; $("#m-release").value=p.release;
+});
+$("#m-tone").addEventListener("click", e=>{
+  if(e.target.tagName!=="BUTTON") return;
+  msgTone = e.target.dataset.tone;
+  $$("#m-tone button").forEach(b=>b.classList.toggle("on", b===e.target));
+});
+$("#m-go").addEventListener("click", ()=>{
+  const f = { to:$("#m-to").value, recognize:$("#m-recognize").value, clarify:$("#m-clarify").value, respect:$("#m-respect").value, request:$("#m-request").value, release:$("#m-release").value };
+  if(!(f.recognize||f.clarify||f.respect||f.request||f.release)){ toast("Fill in a field or two first"); return; }
+  const msg = buildMessage(f, msgTone);
+  $("#m-out").innerHTML = `<div class="out" id="m-text">${esc(msg)}</div>
+    <div class="row" style="margin-top:12px"><button class="btn sm primary" id="m-copy">Copy message</button><button class="btn sm ghost" id="m-save">Save</button></div>`;
+  $("#m-copy").onclick=()=>copy(msg);
+  $("#m-save").onclick=()=>saveItem("message", { _type:"Message", To:f.to, Message:msg });
+});
+
+/* --- coherence --- */
+function renderCoherence(){
+  $("#c-date").textContent = "Three questions. One minute. Aim the day. — " + todayKey();
+  const today = coherence[todayKey()];
+  if(today){ $("#c-alive").value=today.alive||""; $("#c-matters").value=today.matters||""; $("#c-action").value=today.action||""; }
+  // streak
+  let streak=0; let d=new Date();
+  for(;;){ const k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+    if(coherence[k]){ streak++; d.setDate(d.getDate()-1);} else break; }
+  const sc=$("#c-streak"); if(streak>0){ sc.hidden=false; sc.textContent=streak+(streak===1?" day":" days")+" in a row"; } else sc.hidden=true;
+  // history (last 7, excluding today)
+  const keys = Object.keys(coherence).sort().reverse().filter(k=>k!==todayKey()).slice(0,7);
+  $("#c-history").innerHTML = keys.length ? "<div class='hint' style='margin-bottom:8px'>Recent</div>"+keys.map(k=>{
+    const c=coherence[k]; return `<div class="libitem"><div class="meta"><span class="chip">${k}</span></div>
+      <div class="preview"><strong>Alive:</strong> ${esc(c.alive||"—")}<br><strong>Matters:</strong> ${esc(c.matters||"—")}<br><strong>Next loving action:</strong> ${esc(c.action||"—")}</div></div>`;
+  }).join("") : "";
+}
+$("#c-save").addEventListener("click", ()=>{
+  coherence[todayKey()] = { alive:$("#c-alive").value.trim(), matters:$("#c-matters").value.trim(), action:$("#c-action").value.trim(), ts:nowISO() };
+  Store.write(KEY.coh, coherence); toast("Coherence saved"); renderCoherence();
+});
+
+/* --- library --- */
+function saveItem(kind, obj){
+  const item = { id:"x"+Math.abs(hash(JSON.stringify(obj)+nowISO())).toString(36), kind, obj, ts:nowISO() };
+  library.unshift(item); Store.write(KEY.lib, library); toast("Saved to library");
+}
+function hash(s){ let h=0; for(let i=0;i<s.length;i++){ h=(h<<5)-h+s.charCodeAt(i); h|=0; } return h; }
+function renderLibrary(){
+  // populate filter
+  const types = [...new Set(library.map(i=>i.obj._type||i.kind))];
+  const sel=$("#lib-filter"); const cur=sel.value;
+  sel.innerHTML = '<option value="">All types</option>'+types.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join("");
+  sel.value = cur;
+  const filt = sel.value;
+  const items = library.filter(i=> !filt || (i.obj._type||i.kind)===filt);
+  $("#lib-list").innerHTML = items.length ? items.map(i=>{
+    const label = i.obj._type || i.kind;
+    let preview;
+    if(i.kind==="message") preview = esc((i.obj.Message||"").slice(0,180));
+    else if(i.kind==="reframe") preview = "<strong>"+esc(i.obj.From||"")+"</strong> → "+esc(i.obj["Positive Frame"]||"");
+    else preview = esc((i.obj["Next Action"]||i.obj.Next_Action||i.obj.Meaning||i.obj.Claim||"").slice(0,180));
+    return `<div class="libitem" data-id="${i.id}">
+      <div class="meta"><span class="chip type">${esc(label)}</span><span class="when">${new Date(i.ts).toLocaleString()}</span></div>
+      <div class="preview">${preview}</div>
+      <div class="acts"><button class="btn sm ghost lib-copy">Copy</button><button class="btn sm ghost lib-del">Delete</button></div>
+    </div>`;
+  }).join("") : `<div class="empty">Nothing saved yet. Generate a structible, reframe, or message and tap <strong>Save</strong>.</div>`;
+}
+$("#lib-list").addEventListener("click", e=>{
+  const card = e.target.closest(".libitem"); if(!card) return;
+  const item = library.find(i=>i.id===card.dataset.id); if(!item) return;
+  if(e.target.classList.contains("lib-copy")){
+    const txt = item.kind==="message" ? item.obj.Message : item.kind==="reframe" ? item.obj["Positive Frame"] : structibleToText(item.obj);
+    copy(txt);
+  }
+  if(e.target.classList.contains("lib-del")){ library = library.filter(i=>i.id!==item.id); Store.write(KEY.lib, library); renderLibrary(); }
+});
+$("#lib-filter").addEventListener("change", renderLibrary);
+$("#lib-export").addEventListener("click", ()=>{
+  const blob = new Blob([JSON.stringify(library,null,2)], {type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="structible-library.json"; a.click(); URL.revokeObjectURL(a.href);
+});
+$("#lib-clear").addEventListener("click", ()=>{ if(confirm("Delete all saved structibles on this device?")){ library=[]; Store.write(KEY.lib, library); renderLibrary(); } });
+
+/* --- settings drawer --- */
+function openDrawer(){ $("#drawer").classList.add("open"); syncSettingsUI(); }
+function closeDrawer(){ $("#drawer").classList.remove("open"); }
+$("#drawer-close").addEventListener("click", closeDrawer);
+$("#drawer").addEventListener("click", e=>{ if(e.target.id==="drawer") closeDrawer(); });
+$("#set-theme").addEventListener("click", e=>{ if(e.target.tagName!=="BUTTON")return; settings.theme=e.target.dataset.theme; applyTheme(); saveSettings(); });
+$("#set-ollama-on").addEventListener("change", e=>{ settings.ollamaOn=e.target.checked; saveSettings(); });
+$("#set-ollama-url").addEventListener("change", e=>{ settings.ollamaUrl=e.target.value.trim()||settings.ollamaUrl; saveSettings(); });
+$("#set-ollama-model").addEventListener("change", e=>{ settings.ollamaModel=e.target.value.trim()||settings.ollamaModel; saveSettings(); });
+$("#set-ollama-test").addEventListener("click", testOllama);
+function saveSettings(){ Store.write(KEY.set, settings); }
+function syncSettingsUI(){
+  $$("#set-theme button").forEach(b=>b.classList.toggle("on", b.dataset.theme===settings.theme));
+  $("#set-ollama-on").checked = settings.ollamaOn;
+  $("#set-ollama-url").value = settings.ollamaUrl;
+  $("#set-ollama-model").value = settings.ollamaModel;
+}
+function applyTheme(){ document.documentElement.setAttribute("data-theme", settings.theme==="auto" ? "" : settings.theme); if(settings.theme==="auto") document.documentElement.removeAttribute("data-theme"); }
+
+/* --- optional Ollama enhancement (honestly tagged, local-only) --- */
+const POS_SYSTEM = "You are Structible's assistant, bound by the LAB Positive Grammar. Convert the user's raw thought into a structible with EXACTLY these fields: Type, Signal, Meaning, Positive Frame, Next Action. Rules: preserve truth — never assert anything false to sound positive; the Positive Frame must be truthful and constructive (reframe failure as a constraint discovered, never fabricate hope); Next Action must be ONE concrete step. Reply ONLY with strict minified JSON: {\"Type\":\"\",\"Signal\":\"\",\"Meaning\":\"\",\"Positive Frame\":\"\",\"Next Action\":\"\"}.";
+async function testOllama(){
+  const s=$("#set-ollama-status"); s.textContent="Testing…";
+  try{ const r= await fetch(settings.ollamaUrl.replace(/\/$/,"")+"/api/tags",{method:"GET"});
+    if(r.ok){ const j=await r.json(); s.textContent="Connected · "+((j.models&&j.models.length)||0)+" models"; }
+    else s.textContent="Reachable but HTTP "+r.status;
+  }catch(e){ s.textContent="Not reachable (is Ollama running? set OLLAMA_ORIGINS to allow this page)"; }
+}
+async function enhanceWithOllama(base){
+  const st=$("#s-enh-status"), out=$("#s-enh-out"); st.textContent="Asking local model…"; out.innerHTML="";
+  try{
+    const r = await fetch(settings.ollamaUrl.replace(/\/$/,"")+"/api/chat",{ method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ model:settings.ollamaModel, stream:false, options:{temperature:0.5},
+        messages:[{role:"system",content:POS_SYSTEM},{role:"user",content:base._raw||""}] }) });
+    if(!r.ok){ st.textContent="Model HTTP "+r.status; return; }
+    const j = await r.json(); const content = (j.message&&j.message.content)||"";
+    const m = content.match(/\{[\s\S]*\}/); if(!m){ st.textContent="No JSON in model reply"; return; }
+    const obj = JSON.parse(m[0]); obj._type = obj.Type||"Thought"; obj._raw = base._raw;
+    st.textContent="";
+    out.innerHTML = `<div style="margin-top:6px"><span class="chip inferred">Inferred · local model suggestion · not ground truth</span></div>`
+      + renderStructibleCard(obj,{})
+      + `<div class="row" style="margin-top:8px"><button class="btn sm primary act-accept-enh" data-obj='${esc(JSON.stringify(obj))}'>Use this</button></div>`;
+  }catch(e){ st.textContent="Not reachable. Structible's core engine still works without a model."; }
+}
+
+/* --- speech input (optional, graceful) --- */
+function wireMic(btnId, targetId){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const btn = $("#"+btnId); if(!SR) { btn.hidden=true; return; }
+  btn.hidden=false;
+  let rec=null, on=false;
+  btn.addEventListener("click", ()=>{
+    if(on){ rec&&rec.stop(); return; }
+    rec = new SR(); rec.lang="en-US"; rec.interimResults=true; rec.continuous=false;
+    let buf = $("#"+targetId).value;
+    rec.onresult = (ev)=>{ let s=""; for(const r of ev.results) s+=r[0].transcript; $("#"+targetId).value = (buf?buf+" ":"")+s; };
+    rec.onend = ()=>{ on=false; btn.classList.remove("live"); btn.textContent="🎙 Speak"; };
+    rec.onerror = ()=>{ on=false; btn.classList.remove("live"); btn.textContent="🎙 Speak"; toast("Mic unavailable"); };
+    rec.start(); on=true; btn.classList.add("live"); btn.textContent="● Listening…";
+  });
+}
+
+/* --- init --- */
+applyTheme();
+wireMic("s-mic","s-input");
+wireMic("r-mic","r-input");
+// Enter-to-run on single-line-ish: Ctrl/Cmd+Enter in the generator
+$("#s-input").addEventListener("keydown", e=>{ if((e.metaKey||e.ctrlKey)&&e.key==="Enter") $("#s-go").click(); });
+$("#r-input").addEventListener("keydown", e=>{ if((e.metaKey||e.ctrlKey)&&e.key==="Enter") $("#r-go").click(); });
+</script>
+</body>
+</html>
